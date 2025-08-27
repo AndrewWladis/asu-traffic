@@ -5,10 +5,13 @@ import { useState, useEffect } from 'react';
 export default function Home() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [occupancyData, setOccupancyData] = useState([
-    { id: 0, name: 'Hayden Library', building: 'LIB', occupancy: 'low', occupancyPercentage: 10, lastUpdated: '3 min ago' },
-    { id: 1, name: 'Sun Devil Fitness Center', building: 'SDFCT', occupancy: 'low', occupancyPercentage: 20, lastUpdated: '3 min ago' },
-    { id: 2, name: 'Memorial Union', building: 'MU', occupancy: 'medium', occupancyPercentage: 50, lastUpdated: '1 min ago' },
-    { id: 3, name: 'Noble Library', building: 'Noble', occupancy: 'high', occupancyPercentage: 80, lastUpdated: '2 min ago' },
+    { id: 0, name: 'Hayden Library', building: 'LIB', occupancyPercentage: 10, lastUpdated: '3 min ago' },
+    { id: 1, name: 'Sun Devil Fitness Center', building: 'SDFCT', occupancyPercentage: 20, lastUpdated: '3 min ago' },
+    { id: 2, name: 'Memorial Union', building: 'MU', occupancyPercentage: 50, lastUpdated: '1 min ago' },
+    { id: 3, name: 'Noble Library', building: 'Noble', occupancyPercentage: 80, lastUpdated: '2 min ago' },
+    { id: 4, name: 'Mountain America Stadium', building: 'MAS', occupancyPercentage: 5, lastUpdated: '5 min ago' },
+    { id: 5, name: 'Desert Financial Arena', building: 'DFA', occupancyPercentage: 8, lastUpdated: '4 min ago' },
+    { id: 6, name: 'Gammage Auditorium', building: 'GAM', occupancyPercentage: 95, lastUpdated: '6 min ago' },
   ]);
 
   useEffect(() => {
@@ -18,7 +21,14 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
-  const getOccupancyColor = (level) => {
+  const getOccupancyLevel = (percentage) => {
+    if (percentage < 30) return 'low';
+    if (percentage < 70) return 'medium';
+    return 'high';
+  };
+
+  const getOccupancyColor = (percentage) => {
+    const level = getOccupancyLevel(percentage);
     switch (level) {
       case 'low': return 'bg-green-500';
       case 'medium': return 'bg-yellow-500';
@@ -27,7 +37,8 @@ export default function Home() {
     }
   };
 
-  const getOccupancyText = (level) => {
+  const getOccupancyText = (percentage) => {
+    const level = getOccupancyLevel(percentage);
     switch (level) {
       case 'low': return 'Not Crowded';
       case 'medium': return 'Moderately Crowded';
@@ -36,7 +47,8 @@ export default function Home() {
     }
   };
 
-  const getOccupancyIcon = (level) => {
+  const getOccupancyIcon = (percentage) => {
+    const level = getOccupancyLevel(percentage);
     switch (level) {
       case 'low': return '😌';
       case 'medium': return '😐';
@@ -76,13 +88,13 @@ export default function Home() {
                       <h4 className="text-lg font-semibold text-white">{building.name}</h4>
                       <p className="text-sm text-gray-400">{building.building}</p>
                     </div>
-                    <div className="text-3xl">{getOccupancyIcon(building.occupancy)}</div>
+                    <div className="text-3xl">{getOccupancyIcon(building.occupancyPercentage)}</div>
                   </div>
                   
                   <div className="flex items-center space-x-3 mb-4">
-                    <div className={`w-3 h-3 ${getOccupancyColor(building.occupancy)} rounded-full`}></div>
+                    <div className={`w-3 h-3 ${getOccupancyColor(building.occupancyPercentage)} rounded-full`}></div>
                     <span className="text-sm font-medium text-gray-300">
-                      {getOccupancyText(building.occupancy)}
+                      {getOccupancyText(building.occupancyPercentage)}
                     </span>
                   </div>
                   <div className="text-sm text-gray-400">
